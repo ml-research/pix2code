@@ -1,0 +1,29 @@
+{
+  "shapes": {
+    "square": "square",
+    "circle": "circle",
+    "triangle": "triangle"
+  },
+  "colors": {
+    "red": [
+      173,
+      35,
+      35
+    ],
+    "blue": [
+      42,
+      75,
+      215
+    ],
+    "yellow": [
+      255,
+      238,
+      51
+    ]
+  },
+  "sizes": {
+    "small": 0,
+    "medium": 1,
+    "large": 2
+  }
+}

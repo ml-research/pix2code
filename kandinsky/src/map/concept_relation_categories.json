@@ -1,0 +1,50 @@
+[
+    {
+        "id": 0,
+        "name": "small"
+    },
+    {
+        "id": 1,
+        "name": "medium"
+    },
+    {
+        "id": 2,
+        "name": "big"
+    },
+    {
+        "id": 3,
+        "name": "red"
+    },
+    {
+        "id": 4,
+        "name": "blue"
+    },
+    {
+        "id": 5,
+        "name": "yellow"
+    },
+    {
+        "id": 6,
+        "name": "triangle"
+    },
+    {
+        "id": 7,
+        "name": "square"
+    },
+    {
+        "id": 8,
+        "name": "circle"
+    },
+    {
+        "id": 9,
+        "name": "same_size"
+    },
+    {
+        "id": 10,
+        "name": "same_color"
+    },
+    {
+        "id": 11,
+        "name": "same_shape"
+    }
+]

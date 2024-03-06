@@ -1,0 +1,22 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+filetype: hypotheses_kandinsky
+
+train: "meta_dataset_image_train.pkl"
+  
+val: "meta_dataset_image_test.pkl"
+
+test: "meta_dataset_image_test.pkl"
+
+qualitative: "qualitative_eval_inputs_for_hierarchy.pkl"
+
+cross_split: "${data.num_positives}_0.10_hypotheses_heavy.json"
+cross_split_hypothesis_image_mapping: "${data.num_positives}_0.10_image_hyp_mapping.json"

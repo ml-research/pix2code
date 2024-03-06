@@ -1,0 +1,110 @@
+[
+    {
+        "id": 0,
+        "name": "smallredtriangle"
+    },
+    {
+        "id": 1,
+        "name": "smallredsquare"
+    },
+    {
+        "id": 2,
+        "name": "smallredcircle"
+    },
+    {
+        "id": 3,
+        "name": "smallbluetriangle"
+    },
+    {
+        "id": 4,
+        "name": "smallbluesquare"
+    },
+    {
+        "id": 5,
+        "name": "smallbluecircle"
+    },
+    {
+        "id": 6,
+        "name": "smallyellowtriangle"
+    },
+    {
+        "id": 7,
+        "name": "smallyellowsquare"
+    },
+    {
+        "id": 8,
+        "name": "smallyellowcircle"
+    },
+    {
+        "id": 9,
+        "name": "mediumredtriangle"
+    },
+    {
+        "id": 10,
+        "name": "mediumredsquare"
+    },
+    {
+        "id": 11,
+        "name": "mediumredcircle"
+    },
+    {
+        "id": 12,
+        "name": "mediumbluetriangle"
+    },
+    {
+        "id": 13,
+        "name": "mediumbluesquare"
+    },
+    {
+        "id": 14,
+        "name": "mediumbluecircle"
+    },
+    {
+        "id": 15,
+        "name": "mediumyellowtriangle"
+    },
+    {
+        "id": 16,
+        "name": "mediumyellowsquare"
+    },
+    {
+        "id": 17,
+        "name": "mediumyellowcircle"
+    },
+    {
+        "id": 18,
+        "name": "bigredtriangle"
+    },
+    {
+        "id": 19,
+        "name": "bigredsquare"
+    },
+    {
+        "id": 20,
+        "name": "bigredcircle"
+    },
+    {
+        "id": 21,
+        "name": "bigbluetriangle"
+    },
+    {
+        "id": 22,
+        "name": "bigbluesquare"
+    },
+    {
+        "id": 23,
+        "name": "bigbluecircle"
+    },
+    {
+        "id": 24,
+        "name": "bigyellowtriangle"
+    },
+    {
+        "id": 25,
+        "name": "bigyellowsquare"
+    },
+    {
+        "id": 26,
+        "name": "bigyellowcircle"
+    }
+]

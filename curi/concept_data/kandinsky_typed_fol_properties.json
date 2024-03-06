@@ -1,0 +1,56 @@
+{
+    "version": "v0.2",
+    "properties": {
+        "shapes": {
+            "square": "square",
+            "circle": "circle",
+            "triangle": "triangle"
+        },
+        "colors": {
+            "red": [
+                173,
+                35,
+                35
+            ],
+            "blue": [
+                42,
+                75,
+                215
+            ],
+            "yellow": [
+                255,
+                238,
+                51
+            ]
+        },
+        "sizes": {
+            "small": 0,
+            "medium": 1,
+            "large": 2
+        }
+    },
+    "metadata": {
+        "image_size": {
+            "x": 240,
+            "y": 160,
+            "z": 16
+        },
+        "max_rotation": 360,
+        "min_objects": 2,
+        "max_objects": 6,
+        "max_object_size": 0.7,
+        "sizes": {
+            "large": 0.7,
+            "small": 0.35
+        },
+        "dimensions_to_idx": {
+            "x": 0,
+            "y": 1
+        },
+        "location_bins": {
+            "x": 8,
+            "y": 8,
+            "z": 8
+        }
+    }
+}

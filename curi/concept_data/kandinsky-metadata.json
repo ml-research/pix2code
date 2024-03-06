@@ -1,0 +1,16 @@
+{
+    "image_size_x": 160,
+    "image_size_y": 240,
+    "image_size_z": 16,
+    "max_object_size": 0.7,
+    "sizes": {
+        "large": 0.7,
+        "medium": 0.5,
+        "small": 0.35
+    },
+    "dimensions_to_idx": {
+        "x": 0,
+        "y": 1,
+        "z": 2
+    }
+}
