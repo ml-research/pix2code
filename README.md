@@ -2,7 +2,7 @@
 
 This is the official repository for the paper [Pix2Code: Learning to Compose Neural Visual Concepts as Programs](https://arxiv.org/abs/2402.08280) which contains code for Pix2Code as well as dataset links for the introduced data sets. Pix2Code is a neuro-symbolic framework for generalizable, inspectable and revisable visual concept learning. By utilizing both neural and program synthesis components, Pix2Code integrates the power of neural object representations with the generalizability and readability of program representations.
 
-<img src="https://github.com/toniwuest/pix2code/assets/26038960/de2b7777-7a06-4087-820a-3ce215fb1627"  height="400">
+<img src="figures/overview.png" alt="Pix2Code overview" height="400">
 
 ## Created Datasets
 ### RelKP
@@ -33,13 +33,13 @@ relkp
 ```
 The RelKP dataset can be downloaded [here](https://hessenbox.tu-darmstadt.de/getlink/fi4qz3W54u3cPs1AdS5AHxK7/rel_kp.zip) for the image folder structure and [here](https://hessenbox.tu-darmstadt.de/getlink/fiHBwrsZk1X4geWZoR59iz8T/rel_kp_curi_format.zip) for the CURI-like folder structure. 
 
-<img src="https://github.com/toniwuest/pix2code/assets/26038960/315d790d-ba86-48dd-90d7-f0c5ef46902d"  height="400">
+<img src="figures/kandinsky.jpg"  height="400">
 
 ### AllCubes-N and AllMetalOneGray-N
 The data sets [AllCubes-N](https://hessenbox.tu-darmstadt.de/getlink/fiF7bBW5EbbLHJqJ8NMcWzZS/all-cubes-X.zip) and [AllMetalOneGray-N](https://hessenbox.tu-darmstadt.de/getlink/fiW5Va9ACWcG6n1oEJrwRTqd/all-metal-one-gray-X.zip) are based on the [CURI](https://github.com/facebookresearch/productive_concept_learning) data set of Vendantam et al. 
 The aim of the data sets is to test for entity level generalization of the concepts `all objects are cubes` and `all objects are metal and one is gray`. For this 200 new test examples of each concept were created with an increased number of concepts, i.e. 5, 8 and 10. 
 
-<img src="https://github.com/toniwuest/pix2code/assets/26038960/22cdfaa2-15f3-465d-81c9-02ff7ebc2093"  height="200"> <img src="https://github.com/toniwuest/pix2code/assets/26038960/a7ce361d-c02c-43ee-8aad-0e61fab65aed"  height="200">
+<img src="figures/all-cubes.jpg"  height="200"> <img src="figures/all-metal-one-gray.jpg"  height="200">
 
 ### CURI-Hans
 A small subset of the CURI data set where one test task has been confounded, download [here](https://hessenbox.tu-darmstadt.de/getlink/fiDMY5wXvQaC3FCkC1gotdaF/confounded-clevr.zip). The test task is the concept `There exists a cube and all objects are metal` and the confounder `cyan` is added to the support set of this task.
