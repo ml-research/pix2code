@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="Pix2Code learns abstract visual concepts in the form of interpretable and generalizable programs.">
+  <meta name="keywords" content="Pix2Code, Visual Concepts, Program Synthesis, Neuro-Symbolic">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pix2Code: Learning to Compose Neural Visual Concepts as Programs</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" href="https://ml-research.github.io">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+        </a>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            More Research
+          </a>
+          <div class="navbar-dropdown">
+            <!-- <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Pix2Code: Learning to Compose Neural Visual Concepts as Programs
+            </h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://ml-research.github.io/people/awuest/index.html">Antonia
+                  W&uuml;st</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://ml-research.github.io/people/wstammer/index.html">Wolfgang
+                  Stammer</a><sup>1,2</sup>,</span>
+              <span class="author-block">
+                <a href="https://ml-research.github.io/people/qdelfosse/index.html">Quentin Delfosse</a><sup>1</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://sites.google.com/view/devendradhami">Devendra Singh Dhami</a><sup>3</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://homes.cs.washington.edu/~seitz/">Kristian Kersting</a><sup>1,2,4,5</sup>,
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>AI/ML Group at TU Darmstadt,</span>
+              <span class="author-block"><sup>2</sup>Hessian Center for AI (hessian.AI),</span>
+              <span class="author-block"><sup>3</sup>Eindhoven University of Technology,</span>
+              <span class="author-block"><sup>4</sup>Centre for Cognitive Science at TU Darmstadt,</span>
+              <span class="author-block"><sup>5</sup>German Research Center for AI (DFKI)</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/pdf/2402.08280" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2402.08280" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Video Link. -->
+                <!-- <span class="link-block">
+                  <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                    </span>
+                    <span>Video</span>
+                  </a>
+                </span> -->
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="https://github.com/ml-research/pix2code"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <!-- Dataset Link. -->
+                <span class="link-block">
+                  <a href="https://hessenbox.tu-darmstadt.de/getlink/fi4qz3W54u3cPs1AdS5AHxK7/rel_kp.zip"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="far fa-images"></i>
+                    </span>
+                    <span>Dataset RelKP</span>
+                  </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="content has-text-centered">
+          <img src="./static/images/motivation.jpg" class="motivation-image" alt="Visual Concept Learning Motivation" />
+
+          <h3 class="subtitle has-text-centered">
+            <span class="method">Pix2Code</span> learns interpretable concepts from positive and negative image examples
+            that can be interpreted, revised and reused for unseen concepts.
+          </h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 
+  <section class="hero is-light is-small">
+    <div class="hero-body">
+      <div class="container">
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="item item-steve">
+            <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/steve.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="item item-chair-tp">
+            <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/chair-tp.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="item item-shiba">
+            <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/shiba.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="item item-fullbody">
+            <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/fullbody.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="item item-blueshirt">
+            <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/blueshirt.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="item item-mask">
+            <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/mask.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="item item-coffee">
+            <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/coffee.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="item item-toby">
+            <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/toby2.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+
+  <section class="hero is-light is-small">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <!-- Abstract. -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+              <p>
+                The challenge in learning abstract concepts from
+                images in an unsupervised fashion lies in the required integration of visual perception and
+                generalizable relational reasoning. Moreover, the unsupervised nature of this task makes it necessary
+                for
+                human users to be able to understand a model's
+                learned concepts and potentially revise false behaviors.
+                To tackle both the generalizability and interpretability constraints of visual concept learning,
+                we propose Pix2Code, a framework that extends
+                program synthesis to visual relational reasoning
+                by utilizing the abilities of both explicit, compositional symbolic and implicit neural representa-
+                tions. This is achieved by retrieving object representations from images and synthesizing relational
+                concepts as λ-calculus programs.
+                We evaluate the diverse properties of Pix2Code on the challenging
+                reasoning domains, Kandinsky Patterns, and CURI,
+                testing its ability to identify compositional visual
+                concepts that generalize to novel data and concept configurations. Particularly, in stark contrast
+                to neural approaches, we show that Pix2Code's
+                representations remain human interpretable and
+                can easily be revised for improved performance
+              </p>
+            </div>
+          </div>
+        </div>
+        <!--/ Abstract. -->
+
+        <!-- Paper video. -->
+        <!-- <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Video</h2>
+          <div class="publication-video">
+            <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0" frameborder="0"
+              allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div> -->
+        <!--/ Paper video. -->
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+
+      <!-- <div class="columns is-centered"> -->
+
+      <!-- Visual Effects. -->
+      <!-- <div class="column">
+          <div class="content">
+            <h2 class="title is-3">Visual Effects</h2>
+            <p>
+              Using <i>nerfies</i> you can create fun visual effects. This Dolly zoom effect
+              would be impossible without nerfies since it would require going through a wall.
+            </p>
+            <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/dollyzoom-stacked.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div> -->
+      <!--/ Visual Effects. -->
+
+      <!-- Matting. -->
+      <!-- <div class="column">
+          <h2 class="title is-3">Matting</h2>
+          <div class="columns is-centered">
+            <div class="column content">
+              <p>
+                As a byproduct of our method, we can also solve the matting problem by ignoring
+                samples that fall outside of a bounding box during rendering.
+              </p>
+              <video id="matting-video" controls playsinline height="100%">
+                <source src="./static/videos/matting.mp4" type="video/mp4">
+              </video>
+            </div>
+
+          </div>
+        </div>
+      </div> -->
+      <!--/ Matting. -->
+
+      <!-- Method overview -->
+      <!--/ Method overview -->
+
+      <!-- Interpretability. -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Interpretable programs for complex visual concepts</h2>
+
+          <div class="content has-text-justified">
+            <p>
+              We show that <span class="method">Pix2Code</span> can learn to compose complex visual concepts as
+              interpretable programs. The learned programs apply a sequence of operations on the symbolic object
+              representations of the input image to transform it into the desired boolean output (i.e., does the image
+              belong to the
+              concept).
+            </p>
+
+            <img src="./static/images/interpretability.jpg" class="interpretability-image"
+              alt="Interpretable programs for complex visual concepts." />
+          </div>
+
+        </div>
+      </div>
+      <br />
+      <!-- / Interpretability-->
+
+      <!-- Generalization. -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Program generalization</h2>
+
+          <div class="columns is-centered">
+
+            <div class="column">
+              <div class="content has-text-justified">
+                <p>
+                  We evaluate <span class="method">Pix2Code</span> on the Kandinsky Patterns and CURI datasets. We show
+                  that
+                  <span class="method">Pix2Code</span> can generalize to novel data and concept configurations,
+                  outperforming neural baselines (for
+                  all experiments, please have a look at the paper).
+                </p>
+                <p>
+                  One of the key advantages of using programs to represent visual concepts is that they generalize well
+                  to unseen examples of the concepts. We show this by increasing the number of objects for, e.g.,
+                  samples of
+                  the concept <i>"All objects are cubes"</i>. The program representation of this concept retrieved by
+                  <span class="method">Pix2Code</span> can be easily
+                  applied to any number of objects, while the neural baseline struggles to generalize.
+                </p>
+
+              </div>
+            </div>
+            <div class="column">
+              <img src="./static/images/generalization.png" class="generalization-image"
+                alt="Program generalization wins over neural baseline." />
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <!--/ Interpolating. -->
+
+      <!-- Human revision. -->
+      <h3 class="title is-3">Human revision of <span class="method">Pix2Code</span></h3>
+      <div class="columns is-centered">
+
+        <div class="column">
+          <img src="./static/images/library.png" class="library-image" alt="Human revision of Pix2Code." />
+        </div>
+
+        <div class="column">
+          <div class="content has-text-justified">
+            <p>
+              The neuro-symbolic nature of <span class="method">Pix2Code</span> allows for human users to understand the
+              learned concepts and potentially revise false behaviors. This can be done on the program level but also by
+              interacting with the library used to generate programs. From this library, program primitives can be
+              added,
+              changed and
+              removed to change the behavior of the model. We illustrate the revision possibilities (+ XIL) by adding
+              and
+              removing
+              primitives in two case studies.
+            </p>
+          </div>
+          <img src="./static/images/counting.png" class="counting-image" alt="Results of revision of Pix2Code." />
+        </div>
+
+      </div>
+      <!--/ Human revision. -->
+
+
+
+      <!-- Concurrent Work. -->
+      <!-- <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Related Links</h2>
+
+          <div class="content has-text-justified">
+            <p>
+              There's a lot of excellent work that was introduced around the same time as ours.
+            </p>
+            <p>
+              <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an
+              idea similar to our windowed position encoding for coarse-to-fine optimization.
+            </p>
+            <p>
+              <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a
+                href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>
+              both use deformation fields to model non-rigid scenes.
+            </p>
+            <p>
+              Some works model videos with a NeRF by directly modulating the density, such as <a
+                href="https://video-nerf.github.io/">Video-NeRF</a>, <a
+                href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a
+                href="https://neural-3d-video.github.io/">DyNeRF</a>
+            </p>
+            <p>
+              There are probably many more by the time you are reading this. Check out <a
+                href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a
+                href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.
+            </p>
+          </div>
+        </div>
+      </div> -->
+      <!--/ Concurrent Work. -->
+
+    </div>
+  </section>
+
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{wust2024pix2code,
+        title={Pix2code: Learning to compose neural visual concepts as programs},
+        author={W{\"u}st, Antonia and Stammer, Wolfgang and Delfosse, Quentin and Dhami, Devendra Singh and Kersting, Kristian},
+        journal={UAI},
+        year={2024}
+      }</code></pre>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <a class="icon-link" href="https://arxiv.org/pdf/2402.08280">
+          <i class="fas fa-file-pdf"></i>
+        </a>
+        <a class="icon-link" href="https://github.com/ml-research/pix2code" class="external-link" disabled>
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This work was supported by the Priority Program (SPP) 2422 in the subproject "Optimization of active
+              surface design of high-speed progressive tools using machine and deep learning algorithms" funded by the
+              German Research Foundation (DFG). Further, it was supported by the German Federal Ministry of Education
+              and Research and the Hessian Ministry of Higher Education, Research, Science and the Arts (HMWK) within
+              their joint support of the National Research Center for Applied Cybersecurity ATHENE, via the "SenPai:
+              XReLeaS" project, the EU ICT-48 Network of AI Research Excellence Center "TAILOR" (EU Horizon 2020, GA
+              No 952215), and the Collaboration Lab “AI in Construction” (AICO). It also benefited from the HMWK cluster
+              projects "The Third Wave of AI" and "The Adaptive Mind" as well as the EU Project TANGO (Grant
+              Agreement no. 101120763). The authors of the Eindhoven University of Technology received support from
+              their Department of Mathematics and Computer Science and the Eindhoven Artificial Intelligence Systems
+              Institute.
+            </p>
+            <p>The website template is based on the source code of <a
+                href="https://github.com/nerfies/nerfies.github.io">this
+                website</a>. </p>
+            <p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
