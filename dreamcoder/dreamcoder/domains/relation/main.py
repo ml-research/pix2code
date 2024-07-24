@@ -5,21 +5,10 @@ import numpy as np
 from rtpt.rtpt import RTPT
 
 from dreamcoder.domains.list.listPrimitives import bootstrapTarget
-from dreamcoder.domains.relation.make_relation_tasks import (
-    get_extra_helper_tasks,
-    make_relation_tasks,
-    make_relation_tasks_test,
-)
+
 from dreamcoder.domains.relation.parse_relation_tasks import parse_relation_tasks
-from dreamcoder.domains.relation.relation_primitives import (
-    get_baseline_primitives,
-    get_kandinsky_primitives,
-    get_less_primitives,
-    get_only_used_primitives,
-    get_primitives,
-    get_less_primitives_with_plus,
-    get_clevr_primitives,
-)
+from dreamcoder.domains.relation.relation_primitives import get_kandinsky_primitives
+
 from dreamcoder.domains.text.main import (
     ConstantInstantiateVisitor,
     LearnedFeatureExtractor,
