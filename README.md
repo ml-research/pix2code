@@ -45,12 +45,15 @@ The aim of the data sets is to test for entity level generalization of the conce
 A small subset of the CURI data set where one test task has been confounded, download [here](https://hessenbox.tu-darmstadt.de/getlink/fiDMY5wXvQaC3FCkC1gotdaF/confounded-clevr.zip). The test task is the concept `There exists a cube and all objects are metal` and the confounder `cyan` is added to the support set of this task.
 
 ## Setup
-Create conda environment and install requirements from
-`kandinsky/requirements.txt` and `pix2seq/requirements.txt`. To use DreamCoder, setup the Docker container from `dreamcoder/Dockerfile`. 
+For pix2seq, you can use the provided `pix2seq/Dockerfile` and `pix2seq/docker-compose.yml` file to setup a Docker container. 
+To use DreamCoder, setup the Docker container from `dreamcoder/Dockerfile`. 
 
 ## Object extraction and task formulation
 ### Pix2Seq
-For the implementation of Pix2Seq we use the code of the pytorch implementation with pretrained model of [Pretrained-Pix2Seq](https://github.com/gaopengcuhk/Pretrained-Pix2Seq). For Pix2Code, Pix2Seq is trained on data sets of random Kandinsky Patterns and random CLEVR images, both of size 2000. The checkpoints can be found in `pix2seq/train_results`.
+For the implementation of Pix2Seq we use the code of the pytorch implementation with pretrained model of [Pretrained-Pix2Seq](https://github.com/gaopengcuhk/Pretrained-Pix2Seq). For Pix2Code, Pix2Seq is trained on data sets of random Kandinsky Patterns and random CLEVR images, both of size 2000. To train pix2seq, use following command:
+```
+sh train.sh --model pix2seq --coco_path <DATA_DIR> --output_dir <RESULT_DIR> 
+```
 
 ### Convert KP to DreamCoder tasks
 1. Download RelKP and store it in `data/kandinsky`

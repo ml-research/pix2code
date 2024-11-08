@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  workspace:
+    privileged: true
+    container_name: pix2seq
+    image: workspace-image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /<YOUR PATH>/pix2code:/workspace
+    entrypoint: bash
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: [ "0", "1" ]
+              capabilities: [ gpu ]
