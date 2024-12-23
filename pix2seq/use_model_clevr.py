@@ -33,6 +33,42 @@ def build_task_dataset(image_set, path, args):
     }
 
     img_folder, ann_file = PATHS[image_set]
+
+    try:
+        # open the annotation file
+        with open(ann_file, "r") as f:
+            data = json.load(f)
+    except Exception as e:
+        print(
+            f"Error loading data from {PATHS[image_set][1]}, start creating dummy instances json..."
+        )
+
+        # create dummy annotation file
+        annotations = {}
+        annotations["annotations"] = []
+        annotations["images"] = []
+
+        # get all images in the directory
+        files = [
+            f
+            for f in os.listdir(PATHS[image_set][0])
+            if exists(os.path.join(PATHS[image_set][0], f))
+        ]
+        # get the ids of the files (name_name_id.png -> id)
+        ids = [f.split("_")[-1].split(".")[0] for f in files]
+        # ids to int
+        ids = [int(i) for i in ids]
+        # sort the ids
+        ids.sort()
+        files.sort()
+
+        for file, id in zip(files, ids):
+            annotations["images"].append({"file_name": file, "id": id})
+
+        # save the annotations to the json file
+        with open(ann_file, "w") as f:
+            json.dump(annotations, f, indent=4)
+
     dataset = CocoDetection(
         img_folder,
         ann_file,

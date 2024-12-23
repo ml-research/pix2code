@@ -1,6 +1,8 @@
+import argparse
 import pickle
 from tqdm import tqdm
 import json
+import os
 
 SPLITS = [
     "color_boolean",
@@ -31,16 +33,17 @@ def get_path(split, mode):
     return map[split]
 
 
-def filter_meta_dataset_for_split(modes=["train", "val", "test"]):
+def filter_meta_dataset_for_split(path, modes=["train"]):
     """Only keep one example per hypothesis."""
 
     for split in SPLITS:
         for mode in modes:
 
             # if filtered meta dataset already exists, skip
-            path_to_filtered_meta_dataset = (
-                "/workspace/curi_release/hypotheses/hypotheses_subset_dc/"
-                + get_path(split, mode).replace(".pkl", "_filtered_subset.pkl")
+            path_to_filtered_meta_dataset = os.path.join(
+                path,
+                "hypotheses/filtered",
+                get_path(split, mode),
             )
 
             try:
@@ -48,13 +51,15 @@ def filter_meta_dataset_for_split(modes=["train", "val", "test"]):
                     print(
                         f"Filtered meta dataset for {split} and {mode} already exists."
                     )
-                    # continue
+                    continue
+
             except FileNotFoundError:
                 pass
 
-            path_to_meta_dataset = (
-                "/workspace/curi_release/hypotheses/v2_typed_simple_fol_depth_6_trials_2000000_ban_1_max_scene_id_200/"
-                + get_path(split, mode)
+            path_to_meta_dataset = os.path.join(
+                path,
+                "hypotheses/v2_typed_simple_fol_depth_6_trials_2000000_ban_1_max_scene_id_200",
+                get_path(split, mode),
             )
 
             with open(path_to_meta_dataset, "rb") as f:
@@ -80,19 +85,25 @@ def filter_meta_dataset_for_split(modes=["train", "val", "test"]):
             # overwrite meta_dataset
             meta_dataset_and_all_hypotheses["meta_dataset"] = filtered_meta_dataset
 
+            # create folder if not exists
+            folder_path = path + "/hypotheses/filtered/"
+            os.makedirs(folder_path, exist_ok=True)
+
             # save
             with open(path_to_filtered_meta_dataset, "wb") as f:
                 pickle.dump(meta_dataset_and_all_hypotheses, f)
 
 
 def create_hypotheses_subsets(
-    modes=["train", "val", "test"], folder="hypotheses_subset", based_on_dc=False
+    path, modes=["train"], folder="filtered_subset", based_on_dict=False
 ):
     for split in SPLITS:
         for mode in modes:
-            path_to_filtered_meta_dataset_subset = (
-                f"/workspace/curi_release/hypotheses/{folder}/"
-                + get_path(split, mode).replace(".pkl", "_filtered_subset.pkl")
+            path_to_filtered_meta_dataset_subset = os.path.join(
+                path,
+                "hypotheses",
+                folder,
+                get_path(split, mode),
             )
 
             try:
@@ -100,29 +111,38 @@ def create_hypotheses_subsets(
                     print(
                         f"Filtered meta dataset subset for {split} and {mode} already exists."
                     )
-                    # continue
+                    continue
             except FileNotFoundError:
                 pass
 
-            path_to_filtered_meta_dataset = (
-                "/workspace/curi_release/hypotheses/filtered_hypotheses/"
-                + get_path(split, mode).replace(".pkl", "_filtered.pkl")
+            path_to_filtered_meta_dataset = os.path.join(
+                path,
+                "hypotheses/filtered",
+                get_path(split, mode).replace(".pkl", "_filtered.pkl"),
             )
 
             with open(path_to_filtered_meta_dataset, "rb") as f:
                 meta_dataset_and_all_hypotheses = pickle.load(f)
                 meta_dataset = meta_dataset_and_all_hypotheses["meta_dataset"]
 
-            if based_on_dc:
+            if based_on_dict and mode == "train":
+                dict_path = os.path.join(
+                    path,
+                    "..",
+                    "concept_data",
+                    "task_id_dict_filtered.json",
+                )
                 with open(
-                    f"/workspace/curi_release/hypotheses/hypotheses_subset_dc/task_id_dict_dc.json",
+                    dict_path,
                     "r",
                 ) as f:
                     task_id_dict = json.load(f)
                 task_ids = task_id_dict[f"{split}_{mode}"]
 
                 # load hyp to id json
-                path_to_hyp_to_id = "/workspace/concept_data/hyp_to_id.json"
+                path_to_hyp_to_id = os.path.join(
+                    path, "..", "concept_data", "hyp_to_id.json"
+                )
                 with open(path_to_hyp_to_id, "r") as f:
                     hyp_to_id = json.load(f)
 
@@ -135,7 +155,7 @@ def create_hypotheses_subsets(
                 if len(list(hypotheses)) == 100 and mode == "train":
                     break
 
-                if based_on_dc:
+                if based_on_dict and mode == "train":
                     if hyp_to_id[hypothesis] in task_ids:
                         hypotheses.add(hypothesis)
                         meta_dataset_subset.append(meta_dataset[i])
@@ -150,23 +170,28 @@ def create_hypotheses_subsets(
             # overwrite meta_dataset
             meta_dataset_and_all_hypotheses["meta_dataset"] = meta_dataset_subset
 
+            # create folder if not exists
+            folder_path = os.path.join(path, "hypotheses", folder)
+            os.makedirs(folder_path, exist_ok=True)
+
             # save
             with open(path_to_filtered_meta_dataset_subset, "wb") as f:
                 pickle.dump(meta_dataset_and_all_hypotheses, f)
 
 
-def create_task_id_list(folder):
+def create_task_id_list(path, folder, modes=["train"]):
     task_id_dict = {}
-    modes = ["train", "val", "test"]
 
     for split in SPLITS:
         for mode in modes:
             if mode == "test":
                 continue
 
-            path_to_filtered_meta_dataset_subset = (
-                f"/workspace/curi_release/hypotheses/{folder}/"
-                + get_path(split, mode).replace(".pkl", "_filtered.pkl")
+            path_to_filtered_meta_dataset_subset = os.path.join(
+                path,
+                "hypotheses",
+                folder,
+                get_path(split, mode),
             )
 
             try:
@@ -179,7 +204,10 @@ def create_task_id_list(folder):
                 continue
 
             # load hyp to id json
-            path_to_hyp_to_id = "/workspace/concept_data/hyp_to_id.json"
+            path_to_hyp_to_id = os.path.join(
+                path, "..", "concept_data", "hyp_to_id.json"
+            )
+
             with open(path_to_hyp_to_id, "r") as f:
                 hyp_to_id = json.load(f)
 
@@ -195,9 +223,18 @@ def create_task_id_list(folder):
             print(f"Added {split}_{mode} to task_id_dict.")
 
     # save
-    path_to_task_id_dict = (
-        f"/workspace/curi_release/hypotheses/{folder}/task_id_dict.json"
+    path_to_task_id_dict = os.path.join(
+        path,
+        "hypotheses",
+        folder,
+        "task_id_dict_filtered.json",
     )
+
+    # create folder if not exists
+    folder_path = os.path.join(path, "hypotheses", folder)
+    os.makedirs(folder_path, exist_ok=True)
+
+    # save task_id_dict
     with open(path_to_task_id_dict, "w") as f:
         json.dump(task_id_dict, f)
 
@@ -208,8 +245,7 @@ def filter_iid_test_data():
     folder = "hypotheses_subset_dc"
 
     path_to_filtered_meta_dataset_subset = (
-        f"/workspace/curi_release/hypotheses/{folder}/"
-        + get_path(split, mode).replace(".pkl", "_filtered_subset.pkl")
+        f"/workspace/curi_release/hypotheses/{folder}/" + get_path(split, mode)
     )
 
     try:
@@ -221,10 +257,9 @@ def filter_iid_test_data():
     except FileNotFoundError:
         pass
 
-    path_to_filtered_meta_dataset = "/workspace/curi_release/hypotheses/v2_typed_simple_fol_depth_6_trials_2000000_ban_1_max_scene_id_200/" + get_path(
-        split, mode
-    ).replace(
-        ".pkl", ".pkl"
+    path_to_filtered_meta_dataset = (
+        "/workspace/curi_release/hypotheses/v2_typed_simple_fol_depth_6_trials_2000000_ban_1_max_scene_id_200/"
+        + get_path(split, mode)
     )
 
     with open(path_to_filtered_meta_dataset, "rb") as f:
@@ -270,9 +305,24 @@ def filter_iid_test_data():
 
 if __name__ == "__main__":
 
-    filter_meta_dataset_for_split(modes=["train"])
-    create_hypotheses_subsets(
-       modes=["train"], folder="hypotheses_subset_dc", based_on_dc=False
+    # parse arguments
+    argsparser = argparse.ArgumentParser()
+    argsparser.add_argument(
+        "--path_to_curi_data",
+        type=str,
+        default="pix2code/curi/curi_release",
+        help="Path to curi data (curi_release folder).",
     )
-    create_task_id_list("filtered_hypotheses")
-    filter_iid_test_data()
+
+    args = argsparser.parse_args()
+
+    # filter meta dataset to only keep one example per hypothesis
+    filter_meta_dataset_for_split(args.path_to_curi_data, modes=["train"])
+
+    # create hypotheses subsets (100 for train, all for test)
+    create_hypotheses_subsets(
+        args.path_to_curi_data,
+        modes=["train"],
+        folder="filtered_subset",
+        based_on_dict=True,
+    )

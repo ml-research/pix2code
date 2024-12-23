@@ -5,6 +5,8 @@ from dataloaders.utils import DatasetFolderPathIndexing
 from dataloaders.utils import clevr_json_loader
 from dataloaders.vocabulary import ClevrJsonToTensor
 import os
+import argparse
+
 
 SPLITS = [
     "color_boolean",
@@ -34,7 +36,7 @@ def get_path(split, mode):
         "color_material": f"color_material_sampling_log_linear_{mode}_threshold_0.10_pos_im_5_neg_im_20_train_examples_500000_neg_type_alternate_hypotheses_alternate_hypo_1_random_seed_42.pkl",
         "color_sampling": f"color_sampling_log_linear_{mode}_threshold_0.10_pos_im_5_neg_im_20_train_examples_500000_neg_type_alternate_hypotheses_alternate_hypo_1_random_seed_42.pkl",
         "comp_sampling": f"comp_sampling_log_linear_{mode}_threshold_0.10_pos_im_5_neg_im_20_train_examples_500000_neg_type_alternate_hypotheses_alternate_hypo_1_random_seed_42.pkl",
-        "iid_sampling": f"iid_sampling_log_linear_{mode}_threshold_0.10_pos_im_5_neg_im_20_train_examples_500000_neg_type_alternate_hypotheses_alternate_hypo_1_random_seed_42_filtered_subset.pkl",
+        "iid_sampling": f"iid_sampling_log_linear_{mode}_threshold_0.10_pos_im_5_neg_im_20_train_examples_500000_neg_type_alternate_hypotheses_alternate_hypo_1_random_seed_42.pkl",
         "length_threshold": f"length_threshold_10_sampling_log_linear_{mode}_threshold_0.10_pos_im_5_neg_im_20_train_examples_500000_neg_type_alternate_hypotheses_alternate_hypo_1_random_seed_42.pkl",
         "shape_sampling": f"shape_sampling_log_linear_{mode}_threshold_0.10_pos_im_5_neg_im_20_train_examples_500000_neg_type_alternate_hypotheses_alternate_hypo_1_random_seed_42.pkl",
     }
@@ -61,7 +63,7 @@ def get_loader_for_modality(
 
 
 def extract_bounding_boxes(scene):
-    # Code from https://github.com/larchen/clevr-vqa/blob/a224099addec82cf25f21d1fcbe11b15d3c02355/bounding_box.py 
+    # Code from https://github.com/larchen/clevr-vqa/blob/a224099addec82cf25f21d1fcbe11b15d3c02355/bounding_box.py
     objs = scene["objects"]
     rotation = scene["directions"]["right"]
 
@@ -137,20 +139,22 @@ def create_task_input(image_dict, shuffle_concepts=True):
     return input
 
 
-def create_curi_tasks(target_folder, mode="support", single_support_samples=True):
+def create_curi_tasks(
+    target_folder, source_folder, mode="support", single_support_samples=True
+):
     """Create DC tasks from CURI test set."""
 
     for split in SPLITS:
+
+        json_loader_path = os.path.join(
+            source_folder, "..", "..", "..", "curi_release", "scenes"
+        )
         if mode == "test":
-            path_to_meta_dataset = (
-                "/workspace/curi_release/hypotheses/v2_typed_simple_fol_depth_6_trials_2000000_ban_1_max_scene_id_200/"
-                + get_path(split, "test")
-            )
+            path_to_meta_dataset = os.path.join(source_folder, get_path(split, "test"))
+
         elif mode == "train":
-            path_to_meta_dataset = (
-                "/workspace/curi_release/hypotheses/hypotheses_subset_dc/"
-                + get_path(split, "train")
-            )
+            path_to_meta_dataset = os.path.join(source_folder, get_path(split, "train"))
+
         elif mode == "all_cubes":
             if split == "all_cubes_5":
                 path_to_meta_dataset = "/workspace/all-cubes-X/CLEVR-5-all-cube/test/hypotheses/hypotheses_clevr/meta_dataset.pkl"
@@ -181,12 +185,23 @@ def create_curi_tasks(target_folder, mode="support", single_support_samples=True
             meta_dataset = meta_dataset_and_all_hypotheses["meta_dataset"]
 
         # load hyp to id json
-        path_to_hyp_to_id = "/workspace/concept_data/hyp_to_id.json"
+        path_to_hyp_to_id = os.path.join(
+            source_folder, "..", "..", "..", "concept_data", "hyp_to_id.json"
+        )
         with open(path_to_hyp_to_id, "r") as f:
             hyp_to_id = json.load(f)
 
         modality_to_transform_fn = {
-            "json": ClevrJsonToTensor("concept_data/clevr_typed_fol_properties.json"),
+            "json": ClevrJsonToTensor(
+                os.path.join(
+                    source_folder,
+                    "..",
+                    "..",
+                    "..",
+                    "concept_data",
+                    "clevr_typed_fol_properties.json",
+                )
+            ),
         }
         # json loader
         loader = get_loader_for_modality(
@@ -205,11 +220,6 @@ def create_curi_tasks(target_folder, mode="support", single_support_samples=True
 
             # get id for hypothesis
             hypothesis_id = hyp_to_id[hypothesis]
-
-            if mode == "query" or mode == "test":
-                key = "query"
-            else:
-                key = "support"
 
             # get support / query samples for hypothesis
             support_sample_ids = meta_dataset[i]["support"].raw_data_ids
@@ -266,9 +276,7 @@ def create_curi_tasks(target_folder, mode="support", single_support_samples=True
 
         # save task_dict
         for id in support_task_dict:
-            path_to_task_dict = (
-                f"/workspace/{target_folder}/{split}/support/task_{id}.json"
-            )
+            path_to_task_dict = f"{target_folder}/{split}/support/task_{id}.json"
             # if path does not exist, create it
             if not os.path.exists(os.path.dirname(path_to_task_dict)):
                 os.makedirs(os.path.dirname(path_to_task_dict))
@@ -277,9 +285,7 @@ def create_curi_tasks(target_folder, mode="support", single_support_samples=True
                 json.dump(support_task_dict[id], f)
 
         for id in query_task_dict:
-            path_to_task_dict = (
-                f"/workspace/{target_folder}/{split}/query/task_{id}.json"
-            )
+            path_to_task_dict = f"{target_folder}/{split}/query/task_{id}.json"
             # if path does not exist, create it
             if not os.path.exists(os.path.dirname(path_to_task_dict)):
                 os.makedirs(os.path.dirname(path_to_task_dict))
@@ -288,17 +294,43 @@ def create_curi_tasks(target_folder, mode="support", single_support_samples=True
                 json.dump(query_task_dict[id], f)
 
 
-
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--source_folder_train",
+        type=str,
+        default="pix2code/curi/curi_release/hypotheses/filtered_subset",
+        help="Path to folder where filtered train meta data is stored.",
+    )
+
+    parser.add_argument(
+        "--source_folder_test",
+        type=str,
+        default="pix2code/curi/curi_release/hypotheses/v2_typed_simple_fol_depth_6_trials_2000000_ban_1_max_scene_id_200",
+        help="Path to folder where test meta data is stored.",
+    )
+
+    parser.add_argument(
+        "--target_folder",
+        type=str,
+        default="pix2code/data",
+        help="Folder to save tasks in",
+    )
+
+    args = parser.parse_args()
+
     create_curi_tasks(
-        target_folder="curi",
+        target_folder=os.path.join(args.target_folder, "curi", "train_tasks"),
+        source_folder=args.source_folder_train,
         mode=f"train",
         single_support_samples=True,
     )
 
     create_curi_tasks(
-        target_folder="curi_dc_test_tasks",
+        target_folder=os.path.join(args.target_folder, "curi", "test_tasks"),
+        source_folder=args.source_folder_test,
         mode=f"test",
         single_support_samples=False,
     )
