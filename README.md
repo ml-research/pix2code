@@ -31,7 +31,7 @@ relkp
 . 
 . 
 ```
-The RelKP dataset can be downloaded [here](https://hessenbox.tu-darmstadt.de/getlink/fi4qz3W54u3cPs1AdS5AHxK7/rel_kp.zip) for the image folder structure and [here](https://hessenbox.tu-darmstadt.de/getlink/fiHBwrsZk1X4geWZoR59iz8T/rel_kp_curi_format.zip) for the CURI-like folder structure. 
+The RelKP dataset can be downloaded [here](https://hessenbox.tu-darmstadt.de/getlink/fi2AvLVx6AyCY1btCkauxeMr/relkp.zip) for the image folder structure and [here](https://hessenbox.tu-darmstadt.de/getlink/fiHBwrsZk1X4geWZoR59iz8T/rel_kp_curi_format.zip) for the CURI-like folder structure. 
 
 <img src="figures/kandinsky.jpg"  height="400">
 
@@ -54,6 +54,8 @@ For the implementation of Pix2Seq we use the code of the pytorch implementation 
 ```
 sh train.sh --model pix2seq --coco_path <DATA_DIR> --output_dir <RESULT_DIR> 
 ```
+
+We provide here the fine-tuned checkpoints for [Kandinsky](https://hessenbox.tu-darmstadt.de/getlink/fiEvAqt1FEn1GXkdYo93C8tK/pix2seq_checkpoint_kandinsky.pth) and [CLEVR](https://hessenbox.tu-darmstadt.de/getlink/fiU3fe6ao2KRm1Q891168Gym/pix2seq_checkpoint_best_clevr.pth).
 
 ### Convert KP to DreamCoder tasks
 1. Download RelKP and store it in `data/kandinsky`
