@@ -13,7 +13,6 @@ from dreamcoder.domains.list.listPrimitives import (
     _unfold,
     bootstrapTarget,
 )
-from dreamcoder.domains.relation.make_relation_tasks import make_relation_tasks
 from dreamcoder.domains.text.main import (
     ConstantInstantiateVisitor,
     LearnedFeatureExtractor,
